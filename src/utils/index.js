@@ -88,3 +88,22 @@ export const getInfoDevice = () => {
 
   return deviceInfo;
 };
+
+// export const getAccessToken = () => {
+//   const now = Math.floor(Date.now() / 1000);
+//   const exp = now + 3600;
+
+//   const header = { cty: "stringee-api;v=1" };
+//   const payload = {
+//     jti: apiKeySid + "-" + now,
+//     iss: apiKeySid,
+//     exp: exp,
+//     rest_api: true,
+//   };
+
+//   const token = JsonWebTokenError.sign(payload, apiKeySecret, {
+//     algorithm: "HS256",
+//     header: header,
+//   });
+//   return token;
+// };

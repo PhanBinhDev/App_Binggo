@@ -22,25 +22,33 @@ import Security from "../components/settings/Security";
 import Wallpaper from "../components/settings/Wallpaper";
 import Notification from "../components/settings/Notification";
 import Devices from "../components/settings/Devices";
+import { TypeUsers } from "../constants";
+import SetupInfoPage from "../pages/private/SetupInfos";
 export default function Router() {
   const { isSignedIn, type } = useSelector((state) => state.auth);
-  const navigate = type === "NEW_USER" ? SETUP_INFO_PATH : DEFAULT_PATH;
+  const navigate = type === TypeUsers.NEW_USER ? SETUP_INFO_PATH : DEFAULT_PATH;
+  console.log(navigate);
   return useRoutes([
     {
       path: "/",
       element: <DashBoardLayout />,
       children: [
+        // root path = "/"
+
+        // main app
         {
           element: <Navigate to={navigate} replace />,
           index: true,
         },
+
+        // chat
         {
           path: "app",
           children: [
             {
               path: "chat",
               element: (
-                <ProtectRoute isSignedIn={isSignedIn} type={type}>
+                <ProtectRoute isSignedIn={isSignedIn}>
                   <ChatLayout />
                 </ProtectRoute>
               ),
@@ -101,6 +109,8 @@ export default function Router() {
             },
           ],
         },
+
+        // authenticate
         {
           path: "auth",
           element: (
@@ -109,14 +119,18 @@ export default function Router() {
             </ProtectRoute>
           ),
         },
+
+        // Setup - Info
         {
           path: SETUP_INFO_PATH,
           element: (
             <ProtectRoute isSignedIn={isSignedIn} redirect="/">
-              <SetupInfo />
+              <SetupInfoPage />
             </ProtectRoute>
           ),
         },
+
+        // Admin - Panel
         {
           path: "admin-panel",
           element: (

@@ -13,6 +13,7 @@ import { useDispatch } from "react-redux";
 import { setUser } from "../../redux/slice/authSlice";
 import { sleep } from "../../utils";
 import { DeviceUUID } from "device-uuid";
+import { TypeUsers } from "../../constants";
 const Authenticate = () => {
   const [isLoading, setIsLoading] = useState(false);
   const dispatch = useDispatch();
@@ -133,7 +134,9 @@ const Authenticate = () => {
           const userData = {
             userInfo: response.userData,
             accessToken: response.accessToken,
-            type: response.userData.isNewUser ? "NEW_USER" : "OLD_USER",
+            type: response.userData.isActive
+              ? TypeUsers.OLD_USER
+              : TypeUsers.NEW_USER,
             isSignedIn: true,
           };
           setTimeout(() => {

@@ -10,3 +10,7 @@ export const ModalTypes = {
     upload: "upload",
   },
 };
+export const TypeUsers = {
+  NEW_USER: "NEW_USER",
+  OLD_USER: "OLD_USER",
+};

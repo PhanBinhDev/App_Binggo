@@ -25,7 +25,6 @@ import { ModalTypes } from "../../constants";
 import { useModal } from "../../hooks/useModal";
 import { useDispatch, useSelector } from "react-redux";
 import { handleGetGalleryApi } from "../../apis/gallery";
-
 const tabCase = {
   avatar: "avatar",
   accounts: "accounts",
@@ -55,9 +54,6 @@ const menuTab = [
   },
 ];
 const SetupInfo = () => {
-  // Set Avatar,
-  // set name
-  // view email,
   const [tabContent, setTabContent] = useState(tabCase.avatar);
   const { userInfo } = useSelector((state) => state.auth);
   const { email } = userInfo;
@@ -69,7 +65,7 @@ const SetupInfo = () => {
     try {
       setIsLoading(true);
       const response = await handleGetGalleryApi("profile");
-      if (response.errCode === 0) {
+      if (response?.errCode === 0) {
         console.log(response);
         setGalleries(response.gallery);
         setFileURL(response.gallery[0].value);
