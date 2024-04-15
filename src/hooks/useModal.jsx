@@ -14,6 +14,7 @@ export const useModal = create((set) => ({
       })),
   },
   onOpen: (type, data = {}) => set({ isOpen: true, type, data }),
+  updateData: (data = {}) => set((state) => ({ ...state, data })),
   onOpenSubModal: (subType, data = {}) =>
     set((state) => ({
       subModal: {

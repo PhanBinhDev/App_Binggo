@@ -6,6 +6,7 @@ export const ModalTypes = {
   deleteKey: "deleteKey",
   viewKey: "viewKey",
   addKey: "addKey",
+  gallery: "gallery",
   subType: {
     upload: "upload",
   },

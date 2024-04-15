@@ -8,6 +8,7 @@ import ModalSessionTimeOut from "../components/Modal/ModalSessionTimeout.jsx";
 import ModalDeleteKey from "../components/Modal/ModalDeleteKey.jsx";
 import ModalViewKey from "../components/Modal/ModalViewKey.jsx";
 import ModalAddKey from "../components/Modal/ModalAddKey.jsx";
+import ModalGallery from "../components/Modal/ModalGallery.jsx";
 
 export const ModalProvider = () => {
   const [isMounted, setIsMounted] = useState(false);
@@ -28,6 +29,7 @@ export const ModalProvider = () => {
       <ModalDeleteKey />
       <ModalViewKey />
       <ModalAddKey />
+      <ModalGallery />
       <ToastContainer delay={3000} position="top-right" />
     </>
   );
