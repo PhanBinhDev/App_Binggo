@@ -24,6 +24,7 @@ const authSlice = createSlice({
       state.isSignedIn = initialState.isSignedIn;
     },
     updateToken: (state, action) => {
+      console.log("Update");
       state.accessToken = action.payload.accessToken;
     },
   },

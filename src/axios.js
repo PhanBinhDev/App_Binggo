@@ -43,7 +43,7 @@ const AxiosInstance = ({ children }) => {
     const errInterceptor = async (error) => {
       const originalRequest = error.config;
       if (error.response.status === 401 && !originalRequest._retry) {
-        if (error.response.data.errCode === 2) {
+        if (error.response.data.errCode == 2) {
           onOpen(ModalTypes.timeOut);
           return Promise.reject(error);
         }
@@ -54,10 +54,14 @@ const AxiosInstance = ({ children }) => {
           } else {
             isRefreshing = true;
             const response = await handleRefreshTokenApi();
-            console.log("Res", response);
-            originalRequest.headers.Authorization = `Bearer ${response.newAccessToken}`;
-            dispatch(updateToken({ accessToken: response.newAccessToken }));
-            onRefreshed(response.newAccessToken);
+            if (response.errCode === 0) {
+              originalRequest.headers.Authorization = `Bearer ${response.newAccessToken}`;
+              dispatch(updateToken({ accessToken: response.newAccessToken }));
+              onRefreshed(response.newAccessToken);
+            } else {
+              onOpen(ModalTypes.timeOut);
+              return Promise.reject(error);
+            }
             return instance(originalRequest);
           }
         } catch (error) {

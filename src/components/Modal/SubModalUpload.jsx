@@ -145,10 +145,10 @@ const SubModalUpload = () => {
                   </label>
                   {previewImage.value !== "" && (
                     <div className="absolute bottom-0 left-0 top-0 right-0">
-                      <div className="relative w-full h-full group rounded-lg border-[2px] border-solid border-green-400">
+                      <div className="relative w-full h-full group rounded-lg overflow-hidden border-[3px] border-solid border-green-400">
                         <img
                           srcSet={previewImage.value}
-                          className="w-full h-full object-cover bg-center rounded-lg group-hover:scale-95 overflow-hidden transition-transform"
+                          className="w-full h-full object-cover bg-center  overflow-hidden transition-transform"
                           alt="image description"
                         />
                         <div

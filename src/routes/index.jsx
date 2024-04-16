@@ -1,4 +1,11 @@
-import { Link, Navigate, Outlet, Route, useRoutes } from "react-router-dom";
+import {
+  Link,
+  Navigate,
+  Outlet,
+  Route,
+  useNavigate,
+  useRoutes,
+} from "react-router-dom";
 import {
   DEFAULT_PATH,
   FRIENDS_PATH,
@@ -6,28 +13,44 @@ import {
   SETTINGS_PATH,
   SETUP_INFO_PATH,
 } from "../config";
-import DashBoardLayout from "../layouts/dashboard";
 import Page404 from "../pages/public/Page404";
 import { ProtectRoute, ProtectRouteAdminDashboard } from "./ProtectRoute";
-import ChatRoom from "../components/Chat/ChatRoom";
+
+// Layout
+import DashBoardLayout from "../layouts/dashboard";
 import ChatLayout from "../layouts/chat";
-import ChatSelect from "../components/Chat/ChatSelect";
-import Authenticate from "../pages/public/Authenticate";
-import { useSelector } from "react-redux";
-import SetupInfo from "../pages/private/SetupInfo";
 import SettingsLayout from "../layouts/settings";
+
+// page
 import Details from "../components/settings/Details";
+import Authenticate from "../pages/public/Authenticate";
+import SetupInfoPage from "../pages/private/SetupInfos";
+
+// Inner page
 import Privacy from "../components/settings/Privacy";
 import Security from "../components/settings/Security";
 import Wallpaper from "../components/settings/Wallpaper";
 import Notification from "../components/settings/Notification";
 import Devices from "../components/settings/Devices";
-import { TypeUsers } from "../constants";
-import SetupInfoPage from "../pages/private/SetupInfos";
+
+import ChatRoom from "../components/Chat/ChatRoom";
+import ChatSelect from "../components/Chat/ChatSelect";
+
+import { useSelector } from "react-redux";
+import SetupInfo from "../pages/private/SetupInfo";
+import { ModalTypes, TypeUsers } from "../constants";
+import { useModal } from "../hooks/useModal";
+import { useEffect } from "react";
 export default function Router() {
   const { isSignedIn, type } = useSelector((state) => state.auth);
+  const navigation = useNavigate();
   const navigate = type === TypeUsers.NEW_USER ? SETUP_INFO_PATH : DEFAULT_PATH;
-  console.log(navigate);
+  const { onOpen } = useModal();
+  useEffect(() => {
+    if (window.location.pathname === SETUP_INFO_PATH) {
+      onOpen(ModalTypes.setupProfile);
+    }
+  }, [window.location.pathname]);
   return useRoutes([
     {
       path: "/",
@@ -125,7 +148,8 @@ export default function Router() {
           path: SETUP_INFO_PATH,
           element: (
             <ProtectRoute isSignedIn={isSignedIn} redirect="/">
-              <SetupInfoPage />
+              {/* {onOpen(ModalTypes.setupProfile)} */}
+              <div></div>
             </ProtectRoute>
           ),
         },
@@ -150,10 +174,9 @@ export default function Router() {
             { path: "settings", element: <>Settings Admin (Change Key)</> },
           ],
         },
-        { path: "*", element: <Navigate to="/404" replace /> },
+        { path: "*", element: <Page404 /> },
       ],
     },
-    { path: "404", element: <Page404 /> },
-    { path: "*", element: <Navigate to="/404" replace /> },
+    { path: "*", element: <Page404 /> },
   ]);
 }

@@ -4,7 +4,6 @@ import Chats from "./Chat";
 const GeneralApp = () => {
   return (
     <>
-      {/* Chats */}
       <Chats />
     </>
   );

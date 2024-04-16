@@ -346,7 +346,6 @@ const Authenticate = () => {
             </div>
           </div>
         );
-
       default:
         setStep(0);
     }

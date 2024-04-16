@@ -1,0 +1,7 @@
+.toastContainer {
+  z-index: 1000 !important;
+}
+.toast {
+  display: flex;
+  align-items: center;
+}

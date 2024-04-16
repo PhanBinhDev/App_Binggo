@@ -7,8 +7,10 @@ export const ModalTypes = {
   viewKey: "viewKey",
   addKey: "addKey",
   gallery: "gallery",
+  setupProfile: "setupProfile",
   subType: {
     upload: "upload",
+    uploadGallery: "uploadGallery",
   },
 };
 export const TypeUsers = {

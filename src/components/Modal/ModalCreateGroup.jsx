@@ -31,6 +31,7 @@ import {
   X,
   FileImage,
   Trash,
+  Image as ImagePhoto,
 } from "@phosphor-icons/react";
 import { Check } from "@phosphor-icons/react/dist/ssr";
 const tabGroupAvatar = [
@@ -62,48 +63,20 @@ const tabGroupAvatar = [
 const defaultLinkAvatarGroup =
   "https://res.cloudinary.com/delkz1vi9/image/upload/v1712017164/Binggo/dwkardezbxirr1vbsag7.webp";
 const ModalCreateGroup = () => {
-  const { onClose, type, isOpen, onOpenSubModal, data } = useModal();
+  const { onClose, type, isOpen, onOpenSubModal, data, onOpen } = useModal();
   const isModalOpen = isOpen && type === ModalTypes.createGroup;
-  console.log("data", data);
   const newOnClose = () => {
     onClose();
     setValueSelect(new Set([]));
   };
-  const [avatarSelected, setAvatarSelected] = useState({});
   const [valueSelect, setValueSelect] = useState(new Set([]));
-  const [gallery, setGallery] = useState(tabGroupAvatar);
   const [isLoading, setIsLoading] = useState(false);
-  const [progress, setProgress] = useState(50);
   const [uploading, setUploading] = useState(null);
-  const fetchGallery = async () => {
-    try {
-      setIsLoading(true);
-      const response = await handleGetGalleryApi("group");
-      if (response?.errCode === 0) {
-        const newGallery = [...gallery];
-        newGallery.map((gallery) => {
-          gallery.data = response.gallery?.filter(
-            (item) => item.subCategory === gallery.key
-          );
-          return gallery;
-        });
-        setIsLoading(false);
-      }
-    } catch (error) {
-      setIsLoading(false);
-      console.log(error);
-    }
-  };
-  useEffect(() => {
-    if (isModalOpen) {
-      fetchGallery();
-    }
-  }, [isModalOpen]);
   useEffect(() => {
     setUploading(null);
     if (Object.keys(data).length > 0) {
-      if (data?.previewImage) {
-        setUploading(data);
+      if (data?.avatarSelect) {
+        setUploading(data?.avatarSelect);
       }
     }
   }, [data]);
@@ -120,28 +93,26 @@ const ModalCreateGroup = () => {
               Create Group
             </ModalHeader>
             <ModalBody>
-              <div className="flex h-56 flex-col mb-1">
+              <div className="flex flex-col h-32 mb-1">
                 <div className="flex justify-center items-center">
-                  {avatarSelected.value ? (
+                  {uploading?.value ? (
                     <Tooltip title="Remove avatar">
                       <>
                         <Badge
                           color="danger"
                           size="lg"
-                          className="size-[18px] cursor-pointer hover:opacity-85"
-                          onClick={() => setAvatarSelected({})}
+                          className="size-[20px] cursor-pointer hover:opacity-85"
+                          onClick={() => setUploading({})}
                           content={<X size={14} weight="bold" />}>
-                          <div className="p-1.5  rounded-[12px] border-solid border-[2px] border-blue-500 bg-slate-100">
+                          <div className=" min-w-[95px] min-h-[95px] flex items-center justify-center rounded-[12px] border-solid border-[2px] border-blue-500 bg-slate-100 overflow-hidden">
                             <Image
                               isZoomed
                               loading="lazy"
-                              className="cursor-pointer rounded-[8px]"
-                              width={92}
-                              height={92}
+                              className="cursor-pointer rounded-none"
+                              width={80}
+                              height={80}
                               alt="Avatar"
-                              src={
-                                avatarSelected.value || defaultLinkAvatarGroup
-                              }
+                              src={uploading?.value || defaultLinkAvatarGroup}
                             />
                           </div>
                         </Badge>
@@ -154,15 +125,15 @@ const ModalCreateGroup = () => {
                           isZoomed
                           loading="lazy"
                           className="cursor-pointer rounded-[8px]"
-                          width={92}
-                          height={92}
+                          width={80}
+                          height={80}
                           alt="Avatar"
                           src={defaultLinkAvatarGroup}
                         />
                       </div>
                     </Badge>
                   )}
-                  <div className="flex flex-col h-full ml-2.5 w-[80%] gap-1.5">
+                  <div className="flex flex-col justify-between h-full ml-2.5 w-[80%] gap-1.5">
                     <Tooltip title="Upload avatar from your pc" placement="top">
                       <>
                         <Button
@@ -173,132 +144,29 @@ const ModalCreateGroup = () => {
                           color="success"
                           radius="lg"
                           variant="solid"
-                          className="rounded-[8px] w-full text-black font-semibold text-[13px]"
+                          className="rounded-[8px] w-full text-zinc-900 font-semibold text-[13px]"
                           startContent={<Upload size={18} />}>
                           Upload from your pc
                         </Button>
                       </>
                     </Tooltip>
-                    {uploading !== null ? (
-                      <div className="w-full flex-1 rounded-md border gap-1 group border-solid border-success-500 p-2 flex flex-col">
-                        <div className="w-full flex-1 flex items-center justify-center">
-                          <div className="flex gap-2 h-full items-center justify-center">
-                            <FileImage size={22} className="text-zinc-500" />
-                          </div>
-                          <div className="h-full flex-1 flex flex-col ml-2">
-                            <h3 className="text-sm font-bold">
-                              {data?.previewImage?.fileName}
-                            </h3>
-                            <p className="text-xs lowercase text-slate-600">
-                              {data?.previewImage?.fileSize} | {progress}%
-                            </p>
-                          </div>
-                          <div className="group-hover:flex flex gap-2 h-full items-center justify-center">
-                            <div className="p-1.5 transition-background flex items-center justify-center rounded-full hover:bg-slate-200 cursor-pointer">
-                              <Trash size={22} className="text-zinc-500" />
-                            </div>
-                          </div>
-                        </div>
-                        <div className="w-full h-[10%] rounded-lg bg-zinc-300">
-                          <div
-                            className={`w-[${progress}%]  h-full rounded-lg bg-green-500 transition-width duration-[0.3s] ease-in-out`}></div>
-                        </div>
-                      </div>
-                    ) : (
-                      <></>
-                    )}
+                    <Tooltip title="Upload avatar from your pc" placement="top">
+                      <>
+                        <Button
+                          onClick={() =>
+                            onOpenSubModal(ModalTypes.subType.uploadGallery)
+                          }
+                          size="md"
+                          color="secondary"
+                          radius="lg"
+                          variant="solid"
+                          className="rounded-[8px] w-full  font-semibold text-[13px]"
+                          startContent={<ImagePhoto size={18} />}>
+                          Gallery
+                        </Button>
+                      </>
+                    </Tooltip>
                   </div>
-                </div>
-                <div className="h-[100px] mt-2.5 mb-1.5">
-                  <Tabs
-                    size="sm"
-                    radius="sm"
-                    color="primary"
-                    variant="solid"
-                    onSelectionChange={() => {
-                      setIsLoading(true);
-                      setTimeout(() => {
-                        setIsLoading(false);
-                      }, 1000);
-                    }}
-                    className={{
-                      tabList: "rounded-[5px] bg-slate-300",
-                      tabContent: "px-0",
-                      panel: "px-0",
-                    }}>
-                    {gallery?.map((item) => (
-                      <Tab
-                        key={item._id}
-                        title={
-                          <div className="flex items-center space-x-1.5">
-                            {item.icon}
-                            <span>{item.title}</span>
-                          </div>
-                        }>
-                        <div
-                          className={`flex w-full items-center  space-x-2.5 p-2 rounded-[8px] ${
-                            !isLoading ? "bg-foreground-200" : "bg-zinc-100"
-                          }`}>
-                          {isLoading ? (
-                            <div className="w-full h-full flex items-center justify-center space-x-2 my-1">
-                              <Spinner />
-                              <span className="text-sm text-zinc-700 select-none">
-                                Loading...
-                              </span>
-                            </div>
-                          ) : (
-                            <>
-                              {item.data.map((image) => (
-                                <>
-                                  {image._id === avatarSelected._id ? (
-                                    <Badge
-                                      key={image._id}
-                                      color="primary"
-                                      className="size-4"
-                                      content={
-                                        image._id === avatarSelected._id && (
-                                          <Check size={14} />
-                                        )
-                                      }>
-                                      <div className="p-1 rounded-lg border-solid border-[2px] bg-sky-100 border-blue-500">
-                                        <Image
-                                          isZoomed
-                                          loading="lazy"
-                                          className="cursor-pointer rounded-[8px]"
-                                          width={40}
-                                          height={40}
-                                          alt="Avatar"
-                                          src={image.value}
-                                          onClick={() =>
-                                            setAvatarSelected(image)
-                                          }
-                                        />
-                                      </div>
-                                    </Badge>
-                                  ) : (
-                                    <div
-                                      key={image._id}
-                                      className="p-1 rounded-lg border-solid border-[2px] bg-sky-100 border-blue-500">
-                                      <Image
-                                        isZoomed
-                                        loading="lazy"
-                                        className="cursor-pointer rounded-[8px]"
-                                        width={40}
-                                        height={40}
-                                        alt="Avatar"
-                                        src={image.value}
-                                        onClick={() => setAvatarSelected(image)}
-                                      />
-                                    </div>
-                                  )}
-                                </>
-                              ))}
-                            </>
-                          )}
-                        </div>
-                      </Tab>
-                    ))}
-                  </Tabs>
                 </div>
               </div>
               <Tooltip title="Group Name" placement="top">

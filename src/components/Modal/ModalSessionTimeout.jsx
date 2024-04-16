@@ -16,7 +16,8 @@ import { handleLogout } from "../../apis/auth";
 import { getInfoDevice } from "../../utils";
 import { DeviceUUID } from "device-uuid";
 const ModalSessionTimeOut = () => {
-  const { onClose, type, isOpen } = useModal();
+  const { onClose, type, isOpen, subModal } = useModal();
+  const { onClose: onCloseSubModal } = subModal;
   const [isLoading, setIsLoading] = useState(false);
   const isModalOpen = isOpen && type === ModalTypes.timeOut;
   const dispatch = useDispatch();
@@ -34,6 +35,7 @@ const ModalSessionTimeOut = () => {
           setIsLoading(false);
           dispatch(signOut());
           onClose();
+          onCloseSubModal();
         }, 1000);
       } else {
         console.log("Something went wrong");
